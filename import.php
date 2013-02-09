@@ -1,23 +1,19 @@
 <?php
 
-$conn = mysql_connect('127.0.0.1', 'root', '');
-if (!$conn) {
-    die('Could not connect: ' . mysql_error());
-}
-mysql_select_db('russian');
+include 'settings.php';
 
-mysql_query("SET NAMES utf8;");
-
-$file = fopen("ru_50k.txt", "r");
+$file = fopen("lemma.txt", "r");
 $i = 0;
 
 while (!feof($file)) {
   $i++;
   $line = fgets($file);
   $row = explode(" ", $line);
-  $word = $row[0];
+  $rank = $row[0];
+  $word = $row[2];
   $frequency = $row[1];
-  $res = mysql_query("INSERT INTO words (words, frequency, rank) VALUES ('" . mysql_escape_string($word) ."', ". intval($frequency) . ", ". intval($i) .")");
+  $pos = $row[3];
+  $res = mysql_query("INSERT INTO words (words, frequency, rank, pos) VALUES ('" . mysql_escape_string($word) ."', ". intval($frequency) . ", ". intval($rank) .",'". mysql_escape_string($pos) ."')");
 }
 
 fclose($file);
